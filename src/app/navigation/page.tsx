@@ -19,7 +19,6 @@ import {
 } from "@/components/ui/navigation-menu";
 import {
   Breadcrumb,
-  BreadcrumbEllipsis,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
@@ -75,6 +74,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { ChevronDown } from "lucide-react";
+import Link from "next/link";
 
 export default function NavigationPage() {
   return (
@@ -105,7 +105,7 @@ export default function NavigationPage() {
                     <ul className="grid gap-3 p-6 w-[400px]">
                       <li className="row-span-3">
                         <NavigationMenuLink asChild>
-                          <a
+                          <Link
                             className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
                             href="/"
                           >
@@ -116,7 +116,7 @@ export default function NavigationPage() {
                               Beautiful, accessible components built with Radix
                               UI and Tailwind CSS.
                             </p>
-                          </a>
+                          </Link>
                         </NavigationMenuLink>
                       </li>
                       <li>

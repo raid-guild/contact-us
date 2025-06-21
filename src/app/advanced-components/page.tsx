@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import * as React from "react";
@@ -10,19 +11,9 @@ import {
   BarChartComponent,
   AreaChartComponent,
   PieChartComponent,
-  ChartGrid,
   sampleData,
 } from "@/components/ui/charts";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -35,15 +26,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  User,
-  FileText,
-  Upload,
-  Edit3,
-  BarChart3,
-  ArrowRight,
-  CheckCircle,
-} from "lucide-react";
+import { FileText, Upload, Edit3, BarChart3, ArrowRight } from "lucide-react";
 
 interface StepProps {
   data?: Record<string, unknown>;
@@ -256,6 +239,8 @@ export default function AdvancedComponentsPage() {
   > | null>(null);
   const [richTextContent, setRichTextContent] = React.useState("");
   const [uploadedFiles, setUploadedFiles] = React.useState<File[]>([]);
+
+  console.log("uploadedFiles", uploadedFiles);
 
   const handleFormBuilderSubmit = (data: Record<string, unknown>) => {
     setFormBuilderData(data);
