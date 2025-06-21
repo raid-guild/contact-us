@@ -26,13 +26,25 @@ export default function Home() {
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Link href="/components">
-                <Button size="lg" variant="moloch">
-                  View Components
+                <Button size="lg" variant="outline" className="w-50">
+                  Components
                 </Button>
               </Link>
-              <Link href="/components">
-                <Button size="lg" variant="outline">
-                  Learn More
+              <Link href="/navigation">
+                <Button size="lg" variant="outline" className="w-50">
+                  Navigation & Layout
+                </Button>
+              </Link>
+            </div>
+            <div className="mt-3 flex items-center justify-center gap-x-6">
+              <Link href="/data-display">
+                <Button size="lg" variant="outline" className="w-50">
+                  Data Display
+                </Button>
+              </Link>
+              <Link href="/advanced-components">
+                <Button size="lg" variant="outline" className="w-50">
+                  Advanced Components
                 </Button>
               </Link>
             </div>
