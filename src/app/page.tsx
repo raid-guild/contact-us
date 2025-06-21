@@ -1,103 +1,119 @@
-import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="min-h-screen bg-background text-foreground">
+      {/* Hero Section */}
+      <div className="relative overflow-hidden">
+        <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8">
+          <div className="mx-auto max-w-2xl text-center">
+            <h1 className="text-4xl font-display font-bold tracking-tight text-foreground sm:text-6xl">
+              RaidGuild
+              <span className="text-moloch-500"> Components</span>
+            </h1>
+            <p className="mt-6 text-lg leading-8 text-muted-foreground font-body">
+              We are slaying Moloch, one web3 build at a time. A comprehensive
+              component library with RaidGuild&apos;s dark, mystical aesthetic.
+            </p>
+            <div className="mt-10 flex items-center justify-center gap-x-6">
+              <Link href="/components">
+                <Button size="lg" variant="moloch">
+                  View Components
+                </Button>
+              </Link>
+              <Link href="/components">
+                <Button size="lg" variant="outline">
+                  Learn More
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
+
+      {/* Features Section */}
+      <div className="mx-auto max-w-7xl px-6 pb-24 sm:pb-32 lg:px-8">
+        <div className="mx-auto max-w-2xl lg:max-w-none">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+            <Card>
+              <CardHeader>
+                <CardTitle className="font-display">Phase 1 Complete</CardTitle>
+                <CardDescription>Core UI Components</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <Badge variant="moloch">Button</Badge>
+                  <Badge variant="moloch">Input</Badge>
+                  <Badge variant="moloch">Card</Badge>
+                  <Badge variant="moloch">Badge</Badge>
+                  <Badge variant="moloch">Avatar</Badge>
+                  <Badge variant="moloch">Separator</Badge>
+                  <Badge variant="moloch">Skeleton</Badge>
+                </div>
+                <p className="mt-4 text-sm text-muted-foreground">
+                  Essential components with RaidGuild theming including moloch
+                  and scroll variants.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="font-display">Form Components</CardTitle>
+                <CardDescription>Interactive Elements</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <Badge variant="scroll">Label</Badge>
+                  <Badge variant="scroll">Textarea</Badge>
+                  <Badge variant="scroll">Select</Badge>
+                  <Badge variant="scroll">Checkbox</Badge>
+                  <Badge variant="scroll">Radio Group</Badge>
+                  <Badge variant="scroll">Switch</Badge>
+                  <Badge variant="scroll">Slider</Badge>
+                </div>
+                <p className="mt-4 text-sm text-muted-foreground">
+                  Complete form system with dark theme and moloch focus states.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="font-display">Brand Colors</CardTitle>
+                <CardDescription>Moloch & Scroll Palettes</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <div className="flex gap-2">
+                    <div className="w-6 h-6 rounded bg-moloch-500"></div>
+                    <div className="w-6 h-6 rounded bg-moloch-600"></div>
+                    <div className="w-6 h-6 rounded bg-moloch-700"></div>
+                  </div>
+                  <div className="flex gap-2">
+                    <div className="w-6 h-6 rounded bg-scroll-600"></div>
+                    <div className="w-6 h-6 rounded bg-scroll-700"></div>
+                    <div className="w-6 h-6 rounded bg-neutral-700"></div>
+                  </div>
+                </div>
+                <p className="mt-4 text-sm text-muted-foreground">
+                  Exact brand colors from RaidGuild guidelines with semantic
+                  mappings.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
