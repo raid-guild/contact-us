@@ -10,14 +10,14 @@ export const maziusDisplay = localFont({
       style: "normal",
     },
   ],
-  variable: "--font-mazius-display",
+  variable: "--font-display",
   display: "swap",
 });
 
 // Secondary Body Font - EB Garamond
 export const ebGaramond = EB_Garamond({
   subsets: ["latin"],
-  variable: "--font-eb-garamond",
+  variable: "--font-body",
   weight: ["400", "500", "600", "700"],
   style: ["normal", "italic"],
   display: "swap",

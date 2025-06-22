@@ -24,7 +24,7 @@ export default function Home() {
               We are slaying Moloch, one web3 build at a time. A comprehensive
               component library with RaidGuild&apos;s dark, mystical aesthetic.
             </p>
-            <div className="mt-10 flex items-center justify-center gap-x-6">
+            <div className="mt-10 flex items-center justify-center gap-x-6 flex-wrap gap-y-4">
               <Link href="/components">
                 <Button size="lg" variant="outline" className="w-50">
                   Components
@@ -36,7 +36,7 @@ export default function Home() {
                 </Button>
               </Link>
             </div>
-            <div className="mt-3 flex items-center justify-center gap-x-6">
+            <div className="mt-3 flex items-center justify-center gap-x-6 flex-wrap gap-y-4">
               <Link href="/data-display">
                 <Button size="lg" variant="outline" className="w-50">
                   Data Display

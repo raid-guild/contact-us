@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${maziusDisplay.variable} ${ebGaramond.variable} antialiased`}
+        className={`${maziusDisplay.variable} ${ebGaramond.variable} font-body antialiased`}
       >
         {children}
         <footer className="mt-16 w-full border-t border-border bg-background/80 py-6 text-center text-sm text-muted-foreground">
