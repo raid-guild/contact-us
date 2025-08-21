@@ -7,6 +7,7 @@
   /* Typography */
   --font-display: var(--font-display), serif;
   --font-body: var(--font-eb-garamond), serif;
+  --font-header: var(--font-header), serif;
   --font-heading: var(--font-display), serif;
 
   /* RaidGuild Brand Colors */
@@ -87,5 +88,10 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-display);
+  font-family: var(--font-header);
+}
+
+/* Debug: Test if font-header class is working */
+.font-header {
+  font-family: var(--font-header) !important;
 }

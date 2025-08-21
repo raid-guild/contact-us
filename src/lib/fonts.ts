@@ -22,3 +22,17 @@ export const ebGaramond = EB_Garamond({
   style: ["normal", "italic"],
   display: "swap",
 });
+
+export const alchemion = localFont({
+  src: [
+    {
+      path: "../../public/fonts/Alchemion.otf",
+      weight: "400",
+      style: "normal",
+    },
+  ],
+  variable: "--font-header",
+  display: "swap",
+  preload: true,
+  fallback: ["serif"],
+});
