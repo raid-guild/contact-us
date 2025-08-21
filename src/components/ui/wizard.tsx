@@ -23,12 +23,19 @@ export interface WizardStep {
   validation?: () => boolean | Promise<boolean>;
 }
 
+interface StepComponentProps {
+  isActive?: boolean;
+  data?: Record<string, unknown>;
+  onUpdate?: (data: Record<string, unknown>) => void;
+}
+
 interface WizardProps {
   steps: WizardStep[];
   onComplete?: (data: Record<string, unknown>) => void;
   className?: string;
   showProgress?: boolean;
   allowBackNavigation?: boolean;
+  showSummary?: boolean;
 }
 
 export function Wizard({
@@ -37,6 +44,7 @@ export function Wizard({
   className,
   showProgress = true,
   allowBackNavigation = true,
+  showSummary,
 }: WizardProps) {
   const [currentStep, setCurrentStep] = React.useState(0);
   const [completedSteps, setCompletedSteps] = React.useState<Set<number>>(
@@ -143,7 +151,7 @@ export function Wizard({
         </div>
       </div>
 
-      <Separator />
+      {/* <Separator /> */}
 
       {/* Current Step Content */}
       <Card>
@@ -156,7 +164,15 @@ export function Wizard({
           )}
         </CardHeader>
         <CardContent>
-          <div className="min-h-[300px]">{steps[currentStep].component}</div>
+          <div className="min-h-[300px]">
+            {React.isValidElement(steps[currentStep].component)
+              ? React.cloneElement(steps[currentStep].component, {
+                  isActive: true,
+                  data: {},
+                  onUpdate: () => {},
+                } as StepComponentProps)
+              : steps[currentStep].component}
+          </div>
         </CardContent>
       </Card>
 
@@ -195,44 +211,46 @@ export function Wizard({
       </div>
 
       {/* Step Summary */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Progress Summary</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
-            {steps.map((step, index) => (
-              <div
-                key={step.id}
-                className={cn(
-                  "flex items-center justify-between p-2 rounded-md",
-                  completedSteps.has(index)
-                    ? "bg-scroll-500/20 border border-scroll-500/30"
-                    : index === currentStep
-                    ? "bg-moloch-500/20 border border-moloch-500/30"
-                    : "bg-muted/50"
-                )}
-              >
-                <span className="text-sm font-medium">{step.title}</span>
-                <div className="flex items-center space-x-2">
-                  {completedSteps.has(index) && (
-                    <Badge
-                      variant="secondary"
-                      className="bg-scroll-500 text-black"
-                    >
-                      <Check className="h-3 w-3 mr-1" />
-                      Complete
-                    </Badge>
+      {showSummary && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Progress Summary</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {steps.map((step, index) => (
+                <div
+                  key={step.id}
+                  className={cn(
+                    "flex items-center justify-between p-2 rounded-md",
+                    completedSteps.has(index)
+                      ? "bg-scroll-500/20 border border-scroll-500/30"
+                      : index === currentStep
+                      ? "bg-moloch-500/20 border border-moloch-500/30"
+                      : "bg-muted/50"
                   )}
-                  {index === currentStep && (
-                    <Badge variant="moloch">Current</Badge>
-                  )}
+                >
+                  <span className="text-sm font-medium">{step.title}</span>
+                  <div className="flex items-center space-x-2">
+                    {completedSteps.has(index) && (
+                      <Badge
+                        variant="secondary"
+                        className="bg-scroll-500 text-black"
+                      >
+                        <Check className="h-3 w-3 mr-1" />
+                        Complete
+                      </Badge>
+                    )}
+                    {index === currentStep && (
+                      <Badge variant="moloch">Current</Badge>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

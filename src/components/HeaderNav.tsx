@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -17,7 +18,7 @@ export default function HeaderNav() {
         <div className="hidden md:flex items-center space-x-8">
           <Link
             href="/"
-            className="text-neutral-800 font-header text-2xl uppercase tracking-wide hover:text-neutral-700 transition-colors"
+            className="text-neutral-800 font-header text-3xl uppercase tracking-wide hover:text-neutral-700 transition-colors"
           >
             Raid Guild
           </Link>
@@ -53,21 +54,14 @@ export default function HeaderNav() {
       {/* Mobile Menu Dropdown */}
       {isMobileMenuOpen && (
         <div className="md:hidden absolute top-full left-0 right-0 bg-neutral-700 border-t border-neutral-600 z-50">
-          {/* Menu Header */}
-          <div className="bg-neutral-800 text-center py-3 border-b border-neutral-600">
-            <span className="text-moloch-200 font-header text-sm uppercase tracking-wide">
-              MENU
-            </span>
-          </div>
-
           {/* Navigation Links */}
           <div className="flex flex-col">
             <Link
               href="/"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="bg-moloch-500 text-moloch-200 font-header text-sm uppercase tracking-wide py-4 px-6 text-center border-b border-neutral-600 hover:bg-moloch-400 transition-colors"
+              className="flex flex-row gap-1 w-full justify-center items-center bg-neutral-800 text-moloch-500 font-header text-sm uppercase tracking-wide py-4 px-6 text-center border-b border-neutral-600 hover:bg-moloch-400 transition-colors"
             >
-              Raid Guild
+              Raid Guild <ArrowRight className="w-3 h-3" />
             </Link>
 
             {/* Action Buttons */}
