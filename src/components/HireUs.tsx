@@ -4,7 +4,7 @@
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { useState } from "react";
 import { Wizard, WizardStep } from "@/components/ui/wizard";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -31,49 +31,15 @@ import {
   TEAM_OPTIONS,
   TIMELINE_OPTIONS,
   PROJECT_PRIORITY_OPTIONS,
+  CONTACT_CHANNEL_OPTIONS,
 } from "@/lib/constants";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-// Zod schemas for form validation
-const hireUsSchema = z.object({
-  name: z.string().min(2, {
-    message: "Name is required.",
-  }),
-  email: z.email({
-    message: "Please enter a valid email address.",
-  }),
-  bio: z.string().min(1, {
-    message: "Bio is required.",
-  }),
-  altContactChannel: z.string().optional(),
-  altContactName: z.string().optional(),
-  projectName: z.string().min(3, {
-    message: "Project name is required.",
-  }),
-  description: z.string().min(10, {
-    message: "Description is required.",
-  }),
-  hasSpecs: z.string().optional(),
-  specsLink: z.url().optional(),
-  budget: z.string().min(1, {
-    message: "Please select a budget range.",
-  }),
-  timeline: z.string().min(1, {
-    message: "Please select a timeline.",
-  }),
-  services: z
-    .array(z.object({ label: z.string(), value: z.string() }))
-    .length(1, {
-      message: "Please select a service",
-    }),
-  team: z.string().min(1, {
-    message: "Please select a team structure.",
-  }),
-  projectPriority: z.string().min(1, {
-    message: "Please select a project priority.",
-  }),
-});
-
-type HireUsFormData = z.infer<typeof hireUsSchema>;
+import {
+  hireUsFormSchema,
+  type HireUsFormData,
+  transformFormDataToApiFormat,
+} from "@/lib/validation";
+import Image from "next/image";
 
 interface StepProps {
   form: ReturnType<typeof useForm<HireUsFormData>>;
@@ -168,8 +134,13 @@ const PersonalInfoStep = ({ form, isActive }: StepProps) => {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="DISCORD">Discord</SelectItem>
-                      <SelectItem value="TELEGRAM">Telegram</SelectItem>
+                      {CONTACT_CHANNEL_OPTIONS.map((o) => {
+                        return (
+                          <SelectItem key={o.value} value={o.value}>
+                            {o.label}
+                          </SelectItem>
+                        );
+                      })}
                     </SelectContent>
                   </Select>
                 )}
@@ -231,28 +202,6 @@ const ProjectDetailsStep = ({ form, isActive }: StepProps) => {
         render={({ field }) => (
           <FormItem>
             <FormLabel>Do you have project specs?</FormLabel>
-            {/* <div className="flex">
-              <FormField
-                control={form.control}
-                name="hasSpecs"
-                render={({ field: dropdownField }) => (
-                  <Select
-                    onValueChange={dropdownField.onChange}
-                    defaultValue={dropdownField.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger className="rounded-r-none w-40">
-                        <SelectValue placeholder="None" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="NONE">None</SelectItem>
-                      <SelectItem value="PARTIAL">Partial</SelectItem>
-                      <SelectItem value="YES">Yes</SelectItem>
-                    </SelectContent>
-                  </Select>
-                )}
-              /> */}
             <FormControl>
               <Input
                 placeholder="URL"
@@ -426,8 +375,18 @@ const RequirementsStep = ({ form, isActive }: StepProps) => {
 };
 
 export default function HireUs() {
+  // State management for user feedback
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submissionStatus, setSubmissionStatus] = useState<
+    "idle" | "success" | "error"
+  >("idle");
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [validationErrors, setValidationErrors] = useState<
+    Array<{ field: string; message: string }>
+  >([]);
+
   const form = useForm<HireUsFormData>({
-    resolver: zodResolver(hireUsSchema),
+    resolver: zodResolver(hireUsFormSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -436,7 +395,6 @@ export default function HireUs() {
       altContactName: "",
       projectName: "",
       description: "",
-      hasSpecs: "NONE",
       specsLink: "",
       budget: "",
       timeline: "",
@@ -468,15 +426,141 @@ export default function HireUs() {
     return result;
   };
 
-  const handleWizardComplete = () => {
+  const handleWizardComplete = async () => {
+    if (isSubmitting) return; // Prevent multiple submissions
+
     const formData = form.getValues();
     console.log("Wizard completed:", formData);
-    // Here you would typically submit the form data to your backend
-    // massage data
-    // // project spec enum based on url in link field
-    // // services map values
-    // // team maps to additonal info
+
+    // Reset states
+    setIsSubmitting(true);
+    setSubmissionStatus("idle");
+    setErrorMessage("");
+    setValidationErrors([]);
+
+    // Transform form data to API format using the centralized function
+    const consultData = transformFormDataToApiFormat(formData);
+
+    try {
+      // For now, we'll need a token. You might want to get this from your auth system
+      const token = "your-auth-token-here"; // Replace with actual token logic
+
+      const response = await fetch("/api/consultations", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ consultData }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        console.log("Consultation submitted successfully:", result);
+        setSubmissionStatus("success");
+        // Reset form after successful submission
+        form.reset();
+      } else {
+        console.error("Failed to submit consultation:", result);
+        setSubmissionStatus("error");
+
+        // Handle validation errors
+        if (result.details && Array.isArray(result.details)) {
+          console.error("Validation errors:", result.details);
+          setValidationErrors(result.details);
+          setErrorMessage("Please fix the validation errors below.");
+        } else {
+          setErrorMessage(
+            result.error || "Failed to submit consultation. Please try again."
+          );
+        }
+      }
+    } catch (error) {
+      console.error("Error submitting consultation:", error);
+      setSubmissionStatus("error");
+      setErrorMessage(
+        "Network error. Please check your connection and try again."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  // Feedback components
+  const SuccessState = () => (
+    <div className="text-center space-y-4 p-8">
+      <div className="flex items-center justify-center">
+        <Image
+          src="/raid-cup-fire-success.svg"
+          alt="raidg guild swords"
+          width="150"
+          height="150"
+        />
+      </div>
+      <h3 className="text-2xl font-semibold text-scroll-400">
+        The Fires Have Been Lit!
+      </h3>
+
+      <a
+        className="text-neutral-400 text-sm font-body hover:text-moloch-300 transition-colors"
+        href="https://discord.gg/raidguild"
+        target="_blank"
+      >
+        Introduce yourself in our Discord
+      </a>
+    </div>
+  );
+
+  const ErrorState = () => (
+    <div className="space-y-4 p-6 border rounded-lg bg-scroll-500">
+      <p className="text-moloch-500">{errorMessage}</p>
+
+      {validationErrors.length > 0 && (
+        <div className="mt-4 text-lg">
+          <h4 className="font-medium text-moloch-800 mb-2">
+            Please fix the following issues:
+          </h4>
+          <ul className="list-disc list-inside space-y-1 text-base text-moloch-600">
+            {validationErrors.map((error, index) => (
+              <li key={index}>
+                <span className="font-medium">{error.field}:</span>{" "}
+                {error.message}
+              </li>
+            ))}
+
+            <li>poopin</li>
+          </ul>
+        </div>
+      )}
+
+      <button
+        onClick={() => {
+          setSubmissionStatus("idle");
+          setErrorMessage("");
+          setValidationErrors([]);
+        }}
+        className="bg-neutral-800 text-moloch-500 font-header text-lg uppercase tracking-wide mt-5 px-6 py-2 border-2 border-neutral-800 rounded-lg hover:bg-moloch-500 transition-colors"
+      >
+        Try Again
+      </button>
+    </div>
+  );
+
+  const LoadingIndicator = () => (
+    <div className="flex items-center justify-center p-8">
+      <div className="text-center space-y-4">
+        <div className="flex items-center justify-center animate-spin [animation-duration:7s]">
+          <Image
+            src="/raid-hour-glass.svg"
+            alt="raidg guild swords"
+            width="150"
+            height="150"
+          />
+        </div>
+      </div>
+    </div>
+  );
 
   const wizardSteps: WizardStep[] = [
     {
@@ -507,24 +591,40 @@ export default function HireUs() {
       {/* Header */}
       <div className="text-center space-y-4">
         <h1 className="text-4xl font-display font-bold">Hire Us</h1>
-        <div className="mx-auto w-full sm:w-3/4">
-          <p className="text-muted-foreground text-center">
-            Get on our consultation queue. The more information you can provide
-            about the work you want to hire Raid Guild for, the better.
-          </p>
+        <div className="mx-auto w-full sm:w-3/">
+          {submissionStatus === "success" ? (
+            <p className=" text-center">
+              Your request has been received. A member of the Guild will be in
+              touch with you soon.
+            </p>
+          ) : (
+            <p className="text-center">
+              Get on our consultation queue. The more information you can
+              provide about the work you want to hire Raid Guild for, the
+              better.
+            </p>
+          )}
         </div>
       </div>
 
       {/* Wizard */}
       <div className="space-y-4">
         <Form {...form}>
-          <Wizard
-            steps={wizardSteps}
-            onComplete={handleWizardComplete}
-            showProgress={false}
-            allowBackNavigation={true}
-            showSummary={false}
-          />
+          {submissionStatus === "success" ? (
+            <SuccessState />
+          ) : submissionStatus === "error" ? (
+            <ErrorState />
+          ) : isSubmitting ? (
+            <LoadingIndicator />
+          ) : (
+            <Wizard
+              steps={wizardSteps}
+              onComplete={handleWizardComplete}
+              showProgress={false}
+              allowBackNavigation={true}
+              showSummary={false}
+            />
+          )}
         </Form>
       </div>
     </div>

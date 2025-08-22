@@ -1,5 +1,10 @@
 import { Option } from "@/components/ui/multiselect";
 
+export const CONTACT_CHANNEL_OPTIONS: Option[] = [
+  { label: "Discord", value: "DISCORD" },
+  { label: "Telegram", value: "TELEGRAM" },
+];
+
 export const BUDGET_OPTIONS: Option[] = [
   { label: "< $5k", value: "LESS_THAN_FIVE_THOUSAND" },
   { label: "$5k - $20k", value: "FIVE_TO_TWENTY_THOUSAND" },
