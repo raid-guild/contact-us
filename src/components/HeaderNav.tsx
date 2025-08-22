@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowRight } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -18,9 +19,15 @@ export default function HeaderNav() {
         <div className="hidden md:flex items-center space-x-8">
           <Link
             href="/"
-            className="text-neutral-800 font-header text-3xl uppercase tracking-wide hover:text-neutral-700 transition-colors"
+            className="flex flex-row items-center gap-2 text-neutral-800 font-header text-lg uppercase tracking-wide"
           >
-            Raid Guild
+            <Image
+              src="/raid-swords-black.svg"
+              alt="raidg guild swords"
+              width="65"
+              height="65"
+            />
+            <div>Raid Guild</div>
           </Link>
         </div>
 
@@ -46,7 +53,7 @@ export default function HeaderNav() {
             onClick={toggleMobileMenu}
             className="text-neutral-800 font-header text-sm uppercase tracking-wide hover:text-neutral-600 transition-colors"
           >
-            Contact
+            Contact Raid Guild
           </button>
         </div>
       </nav>

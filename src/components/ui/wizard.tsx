@@ -55,20 +55,37 @@ export function Wizard({
   const progress = ((currentStep + 1) / steps.length) * 100;
   const isFirstStep = currentStep === 0;
   const isLastStep = currentStep === steps.length - 1;
-  const canProceed = completedSteps.has(currentStep);
+  // const canProceed = completedSteps.has(currentStep);
 
-  const goToStep = (stepIndex: number) => {
+  const goToStep = async (stepIndex: number) => {
+    const currentStepData = steps[currentStep];
+    if (currentStepData.validation) {
+      setIsValidating(true);
+
+      try {
+        const isValid = await currentStepData.validation();
+        if (isValid) {
+          setCompletedSteps((prev) => new Set([...prev, currentStep]));
+        } else {
+          setCompletedSteps((prev) => {
+            const newSet = new Set([...prev]);
+            newSet.delete(currentStep);
+            return newSet;
+          });
+        }
+      } catch (error) {
+        console.error("Validation failed:", error);
+      } finally {
+        setIsValidating(false);
+      }
+    }
+
     if (stepIndex >= 0 && stepIndex < steps.length) {
       setCurrentStep(stepIndex);
     }
   };
 
   const goToNextStep = async () => {
-    if (isLastStep) {
-      onComplete?.({});
-      return;
-    }
-
     const currentStepData = steps[currentStep];
 
     if (currentStepData.validation) {
@@ -77,7 +94,12 @@ export function Wizard({
         const isValid = await currentStepData.validation();
         if (isValid) {
           setCompletedSteps((prev) => new Set([...prev, currentStep]));
-          goToStep(currentStep + 1);
+
+          if (isLastStep) {
+            onComplete?.({});
+          } else {
+            goToStep(currentStep + 1);
+          }
         }
       } catch (error) {
         console.error("Validation failed:", error);
@@ -86,7 +108,12 @@ export function Wizard({
       }
     } else {
       setCompletedSteps((prev) => new Set([...prev, currentStep]));
-      goToStep(currentStep + 1);
+
+      if (isLastStep) {
+        onComplete?.({});
+      } else {
+        goToStep(currentStep + 1);
+      }
     }
   };
 
@@ -95,6 +122,12 @@ export function Wizard({
       goToStep(currentStep - 1);
     }
   };
+
+  // need to check each previous not length
+  const isFinalStepCanSubmit = [...Array(steps.length - 1).keys()].every(
+    (step) => completedSteps.has(step)
+  );
+  const disableSubmit = isLastStep && !isFinalStepCanSubmit;
 
   return (
     <div className={cn("space-y-6", className)}>
@@ -189,7 +222,7 @@ export function Wizard({
         </Button>
 
         <div className="flex items-center space-x-2">
-          {!isLastStep && (
+          {/* {!isLastStep && (
             <Button
               variant="ghost"
               onClick={() => goToStep(currentStep + 1)}
@@ -197,10 +230,10 @@ export function Wizard({
             >
               Skip
             </Button>
-          )}
+          )} */}
           <Button
             onClick={goToNextStep}
-            disabled={isValidating}
+            disabled={isValidating || disableSubmit}
             className="flex items-center space-x-2"
             variant={isLastStep ? "moloch" : "default"}
           >
