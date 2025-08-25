@@ -49,7 +49,7 @@ export const consultationApiSchema = z.object({
             bio: z.string().min(1, "Bio is required"),
             contact_info: z.object({
               data: z.object({
-                email: z.string().email("Valid email is required"),
+                email: z.email("Valid email is required"),
                 discord: z.string().optional(),
                 telegram: z.string().optional(),
               }),
@@ -90,7 +90,7 @@ export const joinUsFormSchema = z.object({
   name: z.string().min(2, {
     message: "Name is required.",
   }),
-  email: z.string().email({
+  email: z.email({
     message: "Please enter a valid email address.",
   }),
   discordHandle: z.string().min(1, {
@@ -102,10 +102,28 @@ export const joinUsFormSchema = z.object({
   }),
 });
 
+// Server-side validation schema for the API
+export const applicationApiSchema = z.object({
+  applicationData: z.object({
+    contact_info: z.object({
+      data: z.object({
+        email: z.email("Valid email is required"),
+        discord: z.string().optional(),
+        github: z.string().optional(),
+      }),
+    }),
+    name: z.string().min(3, "Project name must be at least 3 characters"),
+    introduction: z
+      .string()
+      .min(10, "Introduction must be at least 10 characters"),
+  }),
+});
+
 // Type exports for use in components
 export type HireUsFormData = z.infer<typeof hireUsFormSchema>;
 export type JoinUsFormData = z.infer<typeof joinUsFormSchema>;
 export type ConsultationApiData = z.infer<typeof consultationApiSchema>;
+export type ApplicationApiData = z.infer<typeof applicationApiSchema>;
 
 // Helper function to transform form data to API format
 export const transformFormDataToApiFormat = (formData: HireUsFormData) => {
@@ -151,5 +169,22 @@ export const transformFormDataToApiFormat = (formData: HireUsFormData) => {
     delivery_priorities_key: formData.projectPriority,
     submission_type_key: "UNPAID",
     consultation_status_key: "PENDING",
+  };
+};
+
+// Helper function to transform application form data to API format
+export const transformApplicationDataToApiFormat = (
+  formData: JoinUsFormData
+) => {
+  return {
+    contact_info: {
+      data: {
+        email: formData.email,
+        discord: formData.discordHandle,
+        github: formData.githubUsername || null,
+      },
+    },
+    name: formData.name,
+    introduction: formData.introduction,
   };
 };

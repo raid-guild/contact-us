@@ -15,7 +15,11 @@ import {
   FormMessage,
   RequiredFieldIndicator,
 } from "@/components/ui/form";
-import { joinUsFormSchema, type JoinUsFormData } from "@/lib/validation";
+import {
+  joinUsFormSchema,
+  type JoinUsFormData,
+  transformApplicationDataToApiFormat,
+} from "@/lib/validation";
 import Image from "next/image";
 
 export default function JoinUs() {
@@ -48,17 +52,37 @@ export default function JoinUs() {
     setErrorMessage("");
 
     try {
-      // Simulate API call delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Transform form data to API format using the centralized function
+      const applicationData = transformApplicationDataToApiFormat(data);
 
-      // For now, just log the data - we'll hook this up later
-      console.log("Form data:", data);
+      // For now, we'll need a token. You might want to get this from your auth system
+      const token = "your-auth-token-here"; // Replace with actual token logic
 
-      setSubmissionStatus("success");
-      // Reset form after successful submission
-      form.reset();
+      const response = await fetch("/api/applications", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ applicationData }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        console.log("Application submitted successfully:", result);
+        setSubmissionStatus("success");
+        // Reset form after successful submission
+        form.reset();
+      } else {
+        console.error("Failed to submit application:", result);
+        setSubmissionStatus("error");
+        setErrorMessage(
+          result.error || "Failed to submit application. Please try again."
+        );
+      }
     } catch (error) {
-      console.error("Error submitting form:", error);
+      console.error("Error submitting application:", error);
       setSubmissionStatus("error");
       setErrorMessage(
         "Network error. Please check your connection and try again."
