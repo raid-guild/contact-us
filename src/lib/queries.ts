@@ -15,3 +15,11 @@ export const CONSULTATIONS_CREATE_MUTATION = gql`
     }
   }
 `;
+
+export const APPLICATION_CREATE_MUTATION = gql`
+  mutation ApplicationInsertMutation($application: applications_insert_input!) {
+    insert_applications(objects: [$application]) {
+      affected_rows
+    }
+  }
+`;

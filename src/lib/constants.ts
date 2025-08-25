@@ -19,18 +19,6 @@ export const TIMELINE_OPTIONS: Option[] = [
   { label: "6+ months", value: "6+ months" },
 ];
 
-export const TEAM_OPTIONS: Option[] = [
-  { label: "I need a full team", value: "I need a full team" },
-  {
-    label: "I need to augment my own team",
-    value: "I need to augment my own team",
-  },
-  {
-    label: "Unsure",
-    value: "Unsure",
-  },
-];
-
 export const PROJECT_PRIORITY_OPTIONS: Option[] = [
   { label: "Fast & Polished", value: "FAST_AND_POLISHED" },
   { label: "Fast & Inexpensive", value: "FAST_AND_INEXPENSIVE" },
