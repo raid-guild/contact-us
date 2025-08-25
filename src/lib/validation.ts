@@ -26,12 +26,13 @@ export const hireUsFormSchema = z.object({
   timeline: z.string().min(1, {
     message: "Please select a timeline.",
   }),
-  services: z.array(z.object({ label: z.string(), value: z.string() })).min(1, {
-    message: "Please select a service",
-  }),
-  team: z.string().min(1, {
-    message: "Please select a team structure.",
-  }),
+  services: z
+    .array(z.object({ label: z.string(), value: z.string() }), {
+      message: "Please select a service",
+    })
+    .min(1, {
+      message: "Please select a service",
+    }),
   projectPriority: z.string().min(1, {
     message: "Please select a project priority.",
   }),
@@ -75,7 +76,7 @@ export const consultationApiSchema = z.object({
     }),
     budget_key: z.string().min(1, "Budget selection is required"),
     // desired_delivery_date: z.string().min(1, "Timeline selection is required"),
-    additional_info: z.string().min(1, "Team selection is required"),
+    additional_info: z.string().min(1, "Timeline selection is required"),
     delivery_priorities_key: z.string().min(1, "Project priority is required"),
     submission_type_key: z.string().min(1, "Submission type is required"),
     consultation_status_key: z
@@ -84,8 +85,26 @@ export const consultationApiSchema = z.object({
   }),
 });
 
+// Join Us form schema
+export const joinUsFormSchema = z.object({
+  name: z.string().min(2, {
+    message: "Name is required.",
+  }),
+  email: z.string().email({
+    message: "Please enter a valid email address.",
+  }),
+  discordHandle: z.string().min(1, {
+    message: "Discord handle is required.",
+  }),
+  githubUsername: z.string().optional(),
+  introduction: z.string().min(10, {
+    message: "Please provide a brief introduction (at least 10 characters).",
+  }),
+});
+
 // Type exports for use in components
 export type HireUsFormData = z.infer<typeof hireUsFormSchema>;
+export type JoinUsFormData = z.infer<typeof joinUsFormSchema>;
 export type ConsultationApiData = z.infer<typeof consultationApiSchema>;
 
 // Helper function to transform form data to API format
@@ -128,7 +147,7 @@ export const transformFormDataToApiFormat = (formData: HireUsFormData) => {
     },
     budget_key: formData.budget,
     // desired_delivery_date: formData.timeline,
-    additional_info: `Team Type: ${formData.team}. Timeline: ${formData.timeline}.`,
+    additional_info: `Timeline: ${formData.timeline}.`,
     delivery_priorities_key: formData.projectPriority,
     submission_type_key: "UNPAID",
     consultation_status_key: "PENDING",

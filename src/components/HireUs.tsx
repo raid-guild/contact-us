@@ -27,7 +27,6 @@ import MultipleSelector from "./ui/multiselect";
 import {
   BUDGET_OPTIONS,
   SERVICES_OPTIONS,
-  TEAM_OPTIONS,
   TIMELINE_OPTIONS,
   PROJECT_PRIORITY_OPTIONS,
   CONTACT_CHANNEL_OPTIONS,
@@ -94,7 +93,7 @@ const PersonalInfoStep = ({ form, isActive }: StepProps) => {
         render={({ field }) => (
           <FormItem>
             <FormLabel>
-              Bio <RequiredFieldIndicator />
+              What Is Your Role? <RequiredFieldIndicator />
             </FormLabel>
             <FormControl>
               <Textarea placeholder="Introduce yourself" rows={4} {...field} />
@@ -164,10 +163,13 @@ const ProjectDetailsStep = ({ form, isActive }: StepProps) => {
         render={({ field }) => (
           <FormItem>
             <FormLabel>
-              Project Name <RequiredFieldIndicator />
+              Your Org/Project&apos;s Name <RequiredFieldIndicator />
             </FormLabel>
             <FormControl>
-              <Input placeholder="Enter project name" {...field} />
+              <Input
+                placeholder="Protocol to passion project, what do you go by?"
+                {...field}
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -179,12 +181,11 @@ const ProjectDetailsStep = ({ form, isActive }: StepProps) => {
         render={({ field }) => (
           <FormItem>
             <FormLabel>
-              Project Description <RequiredFieldIndicator />
+              What do you need? <RequiredFieldIndicator />
             </FormLabel>
             <FormControl>
               <Textarea
-                placeholder="Provide a detailed description of your project requirements and
-              goals."
+                placeholder="What can we at RaidGuild build/scope/design/source for you?"
                 rows={7}
                 {...field}
               />
@@ -233,7 +234,7 @@ const RequirementsStep = ({ form, isActive }: StepProps) => {
                 <RadioGroup
                   onValueChange={field.onChange}
                   defaultValue={field.value}
-                  className="flex flex-row gap-10"
+                  className="flex flex-row gap-5 md:gap-10"
                 >
                   {PROJECT_PRIORITY_OPTIONS.map((option) => (
                     <div
@@ -243,7 +244,7 @@ const RequirementsStep = ({ form, isActive }: StepProps) => {
                       <RadioGroupItem value={option.value} id={option.value} />
                       <label
                         htmlFor={option.value}
-                        className="text-lg font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        className="text-sm md:text-lg font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       >
                         {option.label}
                       </label>
@@ -256,7 +257,7 @@ const RequirementsStep = ({ form, isActive }: StepProps) => {
           )}
         />
       </div>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
         <FormField
           control={form.control}
           name="budget"
@@ -315,7 +316,7 @@ const RequirementsStep = ({ form, isActive }: StepProps) => {
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
         <FormField
           control={form.control}
           name="services"
@@ -336,34 +337,6 @@ const RequirementsStep = ({ form, isActive }: StepProps) => {
                   </p>
                 }
               />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="team"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                Team Details <RequiredFieldIndicator />
-              </FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {TEAM_OPTIONS.map((o) => {
-                    return (
-                      <SelectItem key={o.value} value={o.value}>
-                        {o.label}
-                      </SelectItem>
-                    );
-                  })}
-                </SelectContent>
-              </Select>
               <FormMessage />
             </FormItem>
           )}
@@ -398,7 +371,6 @@ export default function HireUs() {
       budget: "",
       timeline: "",
       services: undefined,
-      team: "",
       projectPriority: PROJECT_PRIORITY_OPTIONS[0].value,
     },
   });
@@ -419,7 +391,6 @@ export default function HireUs() {
       "budget",
       "timeline",
       "services",
-      "team",
       "projectPriority",
     ]);
     return result;
