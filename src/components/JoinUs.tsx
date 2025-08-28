@@ -36,7 +36,8 @@ export default function JoinUs() {
       name: "",
       email: "",
       discordHandle: "",
-      githubUsername: "",
+      showcaseComments: "",
+      showcaseUrl: "",
       introduction: "",
     },
   });
@@ -176,7 +177,7 @@ export default function JoinUs() {
             <LoadingIndicator />
           ) : (
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <FormField
                   control={form.control}
                   name="name"
@@ -211,32 +212,14 @@ export default function JoinUs() {
                     </FormItem>
                   )}
                 />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
                   name="discordHandle"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>
-                        Discord Handle <RequiredFieldIndicator />
-                      </FormLabel>
+                      <FormLabel>Discord Username</FormLabel>
                       <FormControl>
                         <Input placeholder="username#1234" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="githubUsername"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>GitHub Username</FormLabel>
-                      <FormControl>
-                        <Input placeholder="github-username" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -256,6 +239,46 @@ export default function JoinUs() {
                       <Textarea
                         placeholder="Tell us about yourself, your skills, and why you want to join Raid Guild..."
                         rows={6}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="showcaseComments"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Work You&apos;re Proud Of <RequiredFieldIndicator />
+                    </FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Tell us about a project, portfolio, or piece of work you're particularly proud of."
+                        rows={4}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="showcaseUrl"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Link to Your Work <RequiredFieldIndicator />
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="url"
+                        placeholder="https://github.com/username, https://portfolio.com, https://linkedin.com/in/username, etc."
                         {...field}
                       />
                     </FormControl>

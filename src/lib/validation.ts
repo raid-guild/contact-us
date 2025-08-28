@@ -93,10 +93,14 @@ export const joinUsFormSchema = z.object({
   email: z.email({
     message: "Please enter a valid email address.",
   }),
-  discordHandle: z.string().min(1, {
-    message: "Discord handle is required.",
+  discordHandle: z.string().optional(),
+  showcaseComments: z.string().min(10, {
+    message:
+      "Please describe the work you're proud of (at least 10 characters).",
   }),
-  githubUsername: z.string().optional(),
+  showcaseUrl: z.url({
+    message: "Please enter a valid URL for your work.",
+  }),
   introduction: z.string().min(10, {
     message: "Please provide a brief introduction (at least 10 characters).",
   }),
@@ -116,6 +120,17 @@ export const applicationApiSchema = z.object({
     introduction: z
       .string()
       .min(10, "Introduction must be at least 10 characters"),
+    comments: z
+      .string()
+      .min(10, "Showcase description must be at least 10 characters"),
+    links: z.object({
+      data: z.array(
+        z.object({
+          type: z.string(),
+          link: z.url("Valid url is required"),
+        })
+      ),
+    }),
   }),
 });
 
@@ -181,10 +196,18 @@ export const transformApplicationDataToApiFormat = (
       data: {
         email: formData.email,
         discord: formData.discordHandle,
-        github: formData.githubUsername || null,
       },
     },
     name: formData.name,
     introduction: formData.introduction,
+    comments: formData.showcaseComments,
+    links: {
+      data: [
+        {
+          type: "OTHER",
+          link: formData.showcaseUrl,
+        },
+      ],
+    },
   };
 };

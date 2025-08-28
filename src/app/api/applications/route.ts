@@ -29,6 +29,8 @@ export async function POST(request: NextRequest) {
 
     const { applicationData } = validationResult.data;
 
+    console.log("applicationData", applicationData);
+
     // Get the token from the request headers or body
     const token =
       request.headers.get("authorization")?.replace("Bearer ", "") ||
